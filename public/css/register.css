@@ -1,0 +1,80 @@
+/* ... (CSS kustom Anda tetap sama di sini) ... */
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+MX+Guides&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+    --color-primary: #f1371f;
+    --color-secondary: #f7e7c4;
+    --color-bg: #45afe4;
+    --color-accent: #4f1963;
+    --color-text-form: #f9a005;
+}
+
+body {
+    font-family: "Poppins";
+    background-color: var(--color-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.login-card {
+    max-width: 450px;
+    width: 90%;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border-top: 5px solid var(--color-primary);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h1 {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.login-header h1 span {
+    color: var(--color-accent);
+}
+
+form {
+    color: var(--color-text-form);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.25rem rgba(241, 55, 31, 0.25);
+}
+
+.btn-custom {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: white;
+}
+
+.icon-large {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+/* Untuk menampilkan pesan error validasi */
+.invalid-feedback {
+    display: block;
+    /* Memastikan pesan error muncul di bawah field */
+}

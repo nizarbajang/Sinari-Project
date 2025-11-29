@@ -1,0 +1,124 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
+
+:root {
+    --color-primary: #f1371f; /* Merah/Oranye */
+    --color-accent: #4f1963; /* Ungu */
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    overflow-x: hidden; /* Mencegah scroll horizontal saat sidebar collapsable */
+}
+
+#sidebar-desktop {
+    min-width: 250px;
+    max-width: 250px;
+    background-color: var(--color-accent);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: all 0.3s;
+    padding: 0;
+    z-index: 1030;
+}
+
+#sidebar-desktop.active {
+    min-width: 80px;
+    max-width: 80px;
+    text-align: center;
+}
+
+#content-wrapper {
+    margin-left: 250px;
+    transition: all 0.3s;
+    padding-top: 20px;
+}
+
+#content-wrapper.active {
+    margin-left: 80px;
+}
+
+#sidebar-desktop .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+#sidebar-desktop.active h3,
+#sidebar-desktop.active p {
+    display: none;
+}
+#sidebar-desktop.active .sidebar-header {
+    padding: 20px 0;
+}
+
+#sidebar-desktop ul.components {
+    padding: 20px 0;
+}
+
+#sidebar-desktop ul li a {
+    padding: 10px 20px;
+    font-size: 1em;
+    display: block;
+    transition: background-color 0.3s;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+#sidebar-desktop ul li a:hover,
+#sidebar-desktop ul li.active > a {
+    background: var(--color-primary); /* Merah/Oranye */
+    color: white;
+    border-radius: 0;
+}
+
+#sidebar-desktop.active ul li a span {
+    display: none;
+}
+
+#sidebar-desktop.active ul li a i {
+    margin-right: 0 !important;
+}
+
+.offcanvas-admin {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.offcanvas-admin a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+}
+
+.offcanvas-admin a:hover,
+.offcanvas-admin .active a {
+    background: var(--color-primary);
+    color: white;
+}
+
+@media (min-width: 992px) {
+    .navbar-toggler {
+        display: none !important;
+    }
+}
+@media (max-width: 991px) {
+    #content-wrapper {
+        margin-left: 0;
+    }
+}
+
+/* Tombol Toggle di Navbar */
+#sidebar-toggle-btn {
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    transition: background-color 0.3s;
+}
+#sidebar-toggle-btn:hover {
+    background-color: var(--color-accent);
+    color: white;
+}
