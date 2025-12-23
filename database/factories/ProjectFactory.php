@@ -5,29 +5,33 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
+ */
 class ProjectFactory extends Factory
 {
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
-        // Ambil ID farmer dan admin yang sudah ada
-        $farmer = User::where('role', 'farmer')->inRandomOrder()->first();
-        $admin = User::where('role', 'admin')->inRandomOrder()->first();
-        
-        $totalUnits = fake()->numberBetween(50, 200);
-        $soldUnits = fake()->numberBetween(0, $totalUnits / 2); // Awalnya terjual sebagian
-
+        $farmerId = User::where('role', 'farmer')->inRandomOrder()->first()->id ?? User::factory()->farmer()->create()->id;
+        $adminId = User::where('role', 'admin')->inRandomOrder()->first()->id ?? User::factory()->admin()->create()->id;
+        $totalUnits = $this->faker->numberBetween(100, 500);
         return [
-            'farmer_id' => $farmer ? $farmer->id : User::factory()->farmer(),
-            'admin_id' => $admin ? $admin->id : User::factory()->admin(),
-            'title' => fake()->catchPhrase() . ' Farm Project',
-            'description' => fake()->paragraph(5),
-            'animal_type' => fake()->randomElement(['Sapi Bali', 'Kambing Etawa', 'Ayam Petelur']),
-            'price_per_unit' => fake()->randomFloat(2, 50000, 200000), // Rp50rb - Rp200rb
+            'farmer_id' => $farmerId,
+            'admin_id' => $adminId,
+            'title' => $this->faker->sentence(3) . ' Farming Project',
+            'description' => $this->faker->paragraph(3),
+            'animal_type' => $this->faker->randomElement(['Ayam Kampung', 'Kambing Etawa', 'Sapi Potong', 'Ikan Lele']),
+            'price_per_unit' => $this->faker->randomFloat(2, 50000, 200000),
             'total_units' => $totalUnits,
-            'sold_units' => $soldUnits,
-            'duration_months' => fake()->numberBetween(6, 18),
-            'profit_percentage' => fake()->randomFloat(2, 10, 30), // 10% - 30% bagi hasil
-            'status' => fake()->randomElement(['active', 'full', 'finished']),
+            'sold_units' => $this->faker->numberBetween(0, (int)($totalUnits * 0.7)), // Maksimal 70% terjual
+            'duration_months' => $this->faker->numberBetween(3, 12),
+            'profit_percentage' => $this->faker->randomFloat(2, 10, 30),
+            'status' => $this->faker->randomElement(['active', 'full', 'finished', 'draft']),
         ];
     }
 }

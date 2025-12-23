@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,12 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class AuthController extends Controller
 {
+    public function index(){
+        $projects = Project::with(['media', 'farmer'])->where('status', 'active')->orderBy('created_at', 'desc')->get();
+        $mainProjects = $projects->take(3);
+        $otherProjects = $projects->slice(3);
+        return view('index', compact('mainProjects', 'otherProjects'));
+    }
     public function showLogin(){
         return view('auth.login');
     }

@@ -12,7 +12,7 @@ class FarmerReportController extends Controller
 {
     public function index()
     {
-        $reports = FarmerReport::where('farmer_id', Auth::id())->with('project')->latest()->paginate(5);
+        $reports = FarmerReport::where('farmer_id', Auth::id())->with('project')->latest()->paginate(8);
         return view('farmer.index', compact('reports'));
     }
     public function create()

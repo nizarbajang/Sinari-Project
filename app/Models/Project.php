@@ -36,4 +36,8 @@ class Project extends Model
     {
         return $this->hasMany(FarmerReport::class);
     }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'project_id');
+    }
 }

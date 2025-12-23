@@ -33,6 +33,43 @@
                             Daftar Proyek</a>
                     </div>
                 </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            📸 Galeri Media Proyek
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @forelse ($project->media as $media)
+                                <div class="col-md-6 mb-3">
+                                    <div class="card p-2 text-center border">
+                                        @if ($media->type == 'image')
+                                            <a href="{{ asset('storage/' . $media->url) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $media->url) }}" class="img-fluid rounded"
+                                                    style="max-height: 250px; width: 100%; object-fit: cover"
+                                                    alt="Gambar Proyek" />
+                                            </a>
+                                        @elseif ($media->type == 'video')
+                                            <i class="fas fa-video fa-5x text-primary d-block my-3"></i>
+                                            <a href="{{ asset('storage/' . $media->url) }}" target="_blank"
+                                                class="btn btn-sm btn-outline-primary mt-2">
+                                                Tonton Video <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        @endif
+                                        <small class="d-block mt-2 text-muted">{{ ucfirst($media->type) }}</small>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12">
+                                    <div class="alert alert-warning text-center">
+                                        Tidak ada foto atau video yang dilampirkan untuk proyek ini.
+                                    </div>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
                 {{-- Form Investasi --}}

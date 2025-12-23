@@ -1,0 +1,147 @@
+/* Definisi Warna */
+:root {
+    --color-primary: #45afe4;
+    --color-accent-red: #f1371f;
+    --color-accent-orange: #f9a005;
+    --color-second-background: #f3d19565;
+    --color-heading: #4f1963;
+    --color-text: #080403;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    color: var(--color-text);
+    line-height: 1.7;
+}
+
+.fw-bold,
+h1,
+h2,
+h3 {
+    color: var(--color-heading);
+}
+
+.section-title {
+    font-weight: 700;
+    color: var(--color-accent-red);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* NAVBAR TRANSPARENT UNTUK HERO */
+.navbar {
+    position: absolute;
+    width: 100%;
+    z-index: 50;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    transition: all 0.3s ease-in-out;
+    background: transparent !important;
+}
+
+/* NAVBAR STICKY KETIKA SCROLL */
+.navbar-scrolled {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-heading) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding-top: 0.7rem !important;
+    padding-bottom: 0.7rem !important;
+}
+
+.navbar-brand,
+.navbar .nav-link {
+    color: white !important;
+    font-weight: 500;
+}
+.navbar .nav-link:hover {
+    color: var(--color-primary) !important;
+}
+
+/* HERO BANNER */
+.hero-section {
+    background: url("/img/background-sinari.png") center/cover no-repeat;
+    padding: 14rem 0 10rem;
+    position: relative;
+    color: white;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+#cara-kerja {
+    background-color: var(--color-second-background);
+}
+.hero-section h1,
+.hero-section p {
+    color: white !important;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+.btn-primary:hover {
+    background-color: #388fbf;
+}
+
+/* Project Card */
+.card-project {
+    height: 100%;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.card-project .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+.feature-card {
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(79, 25, 99, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(69, 175, 228, 0.1);
+    height: 100%; /* Agar semua kartu tingginya sama */
+}
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(69, 175, 228, 0.2);
+}
+.step-icon i {
+    color: var(--color-accent-orange); /* Oranye untuk ikon langkah */
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Project Card Styling */
+.card-project {
+    height: 100%;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.card-project .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Footer */
+.cta-footer {
+    background-color: var(--color-second-background);
+    color: var(--color-heading);
+    padding: 5rem 0;
+}
+
+.main-footer {
+    background-color: var(--color-heading);
+}

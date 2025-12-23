@@ -174,14 +174,6 @@ class UserController extends Controller
         return redirect()->route('users.index')
                          ->with('success', $message);
     }
-
-    /**
-     * Menangani proses upload dan update/delete file avatar.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User|null $user
-     * @return string|null Path file yang baru diupload, atau null jika tidak ada upload baru.
-     */
     private function handleAvatarUpload(Request $request, User $user = null): ?string
     {
         // Cek apakah ada file 'avatar' yang diupload

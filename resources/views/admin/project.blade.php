@@ -47,6 +47,10 @@
                     </tbody>
                 </table>
             </div>
+            {{-- Tambahkan Tautan Pagination di sini --}}
+            <div class="d-flex justify-content-center mt-4">
+                {{ $projects->links() }}
+            </div>
         </div>
     </div>
 @endsection

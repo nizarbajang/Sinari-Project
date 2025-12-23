@@ -11,7 +11,7 @@
 
             @include('farmer.formReport')
 
-            <button class="btn btn-primary mt-3">Update</button>
+            <button class="btn btn-primary mb-3">Update</button>
         </form>
     </div>
 @endsection

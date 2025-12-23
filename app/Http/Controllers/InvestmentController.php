@@ -12,22 +12,20 @@ use Illuminate\Support\Facades\DB;
 class InvestmentController extends Controller
 {
     public function index(){
-       $projects = Project::with('media')
-            ->where('status', 'active')
-            ->latest()
-            ->paginate(10);
+       $availableProjects = Project::where('status', 'active')
+            ->whereColumn('sold_units', '<', 'total_units')
+            ->with('media')
+            ->orderBy('created_at', 'desc')
+            ->paginate(6); // Paginate untuk membatasi hasil
 
-        return view('investor.indexProjects', compact('projects'));
-        // $projects = Project::where('status', 'active')->whereRaw('total_units > sold_units')
-        //             ->orderBy('created_at', 'desc')->get();
-
-        // return view('investor.indexProjects', compact('projects'));
+        return view('investor.indexProjects', compact('availableProjects'));
     }
 
     public function show(Project $project){
         if($project->status !== 'active' || $project->total_units <= $project->sold_units){
-            return redirect()->route('investor.projects.index')->with('error', 'Proyek ini tidak lagi tersedia!');
+            return redirect()->route('investments.projects.index')->with('error', 'Proyek ini tidak lagi tersedia!');
         }
+        $project->load(['media', 'farmer']);
         $availableUnits = $project->total_units - $project->sold_units;
         return view('investor.showProject', compact('project', 'availableUnits'));
     }
@@ -67,10 +65,10 @@ class InvestmentController extends Controller
 
         }catch(\Exception $e){
             DB::rollBack();
-            dd($e->getMessage()); 
+
     // Atau tampilkan di halaman:
     // return redirect()->back()->with('error', 'Gagal: ' . $e->getMessage());
-            // return redirect()->back()->withInput()->with('error', 'Gagal Membuat Investasi');
+            return redirect()->back()->withInput()->with('error', 'Gagal Membuat Investasi');
         }
     }
 
@@ -83,8 +81,13 @@ class InvestmentController extends Controller
     }
 
     public function history(){
-        $investments = Investment::where('user_id', auth()->id())->with('project', 'transaction')
-                        ->orderBy('created_at', 'desc')->get();
+            $investments = Investment::with([
+                'project',
+                'transaction'
+            ])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
 
         return view('investor.historyInvestments', compact('investments'));
     }
@@ -109,5 +112,15 @@ class InvestmentController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal membatalkan Transaksi');
         }
+    }
+    public function detail(Investment $investment){
+        if($investment->user_id !== auth()->id()){
+            abort(403, 'Anda Tidak Berhak melihat detail investasi ini.');
+        }
+        $investment->load(['project', 'transaction']);
+        if($investment->status === 'pending'){
+            return redirect()->route('investments.pending', $investment->id)->with('warning', 'Transaksi ini masih dalam proses pembayaran.');
+        }
+        return view('investor.detail', compact('investment'));
     }
 }

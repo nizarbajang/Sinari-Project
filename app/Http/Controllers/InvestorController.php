@@ -13,73 +13,58 @@ class InvestorController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        
-        // Ambil data investasi milik user
-        $investments = $user->investments()->with('project')->get();
 
-        // 1. Total Investasi Aktif (paid)
-        $totalInvested = $investments->where('status', 'paid')->sum('amount');
-
-        // 2. Dana Menunggu Pembayaran (pending)
-        $pendingAmount = $investments->where('status', 'pending')->sum('amount');
-        
-        // 3. Estimasi Profit (Contoh Perhitungan Sederhana)
-        // Diperlukan tabel 'Profit' atau 'Balance' nyata untuk data akurat.
-        $estimatedProfit = $investments
+        $totalInvestment = Investment::where('user_id', $user->id)->where('status', 'paid')->sum('amount');
+        $pendingTransactions = Transaction::where('user_id', $user->id)->where('status', 'pending')->count();
+        $investedProjects = Investment::where('user_id', $user->id)->distinct('project_id')->count('project_id');
+        // 4. Estimasi keuntungan
+        $estimasiKeuntungan = Investment::where('user_id', $user->id)
             ->where('status', 'paid')
-            ->sum(function ($investment) {
-                // Estimasi Profit = Amount * Profit Share Proyek
-                $profitPercentage = $investment->project->profit_percentage / 100;
-                return $investment->amount * $profitPercentage;
+            ->with('project')
+            ->get()
+            ->sum(function ($inv) {
+                return ($inv->units * $inv->project->price_per_unit) 
+                    * ($inv->project->profit_percentage / 100);
             });
-            
-        // 4. Proyek Terbaru
-        $latestProjects = Project::where('status', 'active')
-            ->whereRaw('total_units > sold_units')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
+
+        // 5. Project yang bisa mulai diinvestasikan
+        $availableProjects = Project::where('status', 'active')
+            ->whereColumn('sold_units', '<', 'total_units')
+            ->with('media')
             ->get();
-        
         return view('investor.dashboard', compact(
-            'totalInvested',
-            'pendingAmount',
-            'estimatedProfit',
-            'latestProjects'
+            'totalInvestment',
+            'pendingTransactions',
+            'investedProjects',
+            'estimasiKeuntungan',
+            'availableProjects'
         ));
     }
-    public function reportFarmer(Project $project){
-        $hasActiveInvesment = $project->investments()->where('user_id', Auth::id())
-        ->whereIn('status', ['paid', 'pending'])->exists();
+    public function reportFarmer(){
+        $user = Auth::user();
 
-        if(!$hasActiveInvesment){
-            return redirect()->route('investments.history')->with('error','Anda hanya dapat melihat laporan proyek yang sedang anda investasikan atau lunas.');
-        }
+        $projectIds = Investment::where('user_id', $user->id)->where('status', 'paid')
+                      ->pluck('project_id');
 
-        $reports = $project->farmerReports()->with('farmer')->latest('created_at')->get();
+        $reports = FarmerReport::whereIn('project_id', $projectIds)->with(['project', 'media'])
+                   ->latest()->paginate(10);
 
-        return view('investor.reportIndex', compact('project', 'reports'));
+        return view('investor.indexReport', compact('reports'));
     }
 
 
-    public function showReport(Project $project, FarmerReport $report){
-        // 1. Otorisasi: Pastikan laporan ini milik proyek yang benar
-        if ($report->project_id !== $project->id) {
-            abort(404, 'Laporan tidak ditemukan untuk proyek ini.');
+    public function showReport($id){
+        $user = Auth::user();
+
+        $report = FarmerReport::with(['project', 'media'])->where('id', $id)->firstOrFail();
+
+        $hasInvestment = Investment::where('user_id', $user->id)->where('project_id', $report->project_id)
+                        ->where('status', 'paid')->exists();
+
+        if(!$hasInvestment){
+            abort(403, 'Anda tidak memiliki akses ke laporan ini!');
         }
 
-        // 2. Otorisasi: Verifikasi kepemilikan investasi (wajib diulang karena Route Model Binding hanya memverifikasi ID)
-        $hasActiveInvestment = $project->investments()
-            ->where('user_id', Auth::id())
-            ->whereIn('status', ['paid', 'running'])
-            ->exists();
-
-        if (!$hasActiveInvestment) {
-            return redirect()->route('investor.investments.history')->with('error', 'Anda tidak berhak melihat detail laporan ini.');
-        }
-        
-        // Load media terkait
-        $report->load('media'); 
-
-        return view('investor.showReports', compact('project', 'report'));
+        return view('investor.showReport', compact('report'));
     }
 }

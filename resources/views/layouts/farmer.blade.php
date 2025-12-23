@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('css/farmer.css') }}">
 </head>
@@ -107,11 +108,26 @@
                 </h4>
 
                 <div class="d-flex ms-auto align-items-center">
-                    <span class="me-3 text-muted d-none d-sm-inline">Halo, Peternak!</span>
+                    @php
+                        $role = Auth::user()->role;
+                    @endphp
+
+                    <a href="
+                        @if ($role === 'farmer') {{ route('farmer.profile') }}
+                        @elseif($role === 'investor')
+                            {{ route('investor.profile') }}
+                        @else
+                            {{ route('admin.profile') }} @endif
+                    "
+                        class="me-3 text-primary" style="font-size: 1.3rem;">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="me-3 text-primary d-none d-sm-inline">Halo, Peternak!</span>
+                    </a>
+
 
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="btn btn-link text-dark">
+                        <button class="btn btn-link text-danger">
                             <i class="fas fa-sign-out-alt"></i> Keluar
                         </button>
                     </form>
